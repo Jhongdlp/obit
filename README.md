@@ -6,7 +6,7 @@
 npx obit
 ```
 
-![obit finding dead code and reporting the commit that killed it](docs/demo.gif)
+![obit finding dead code and reporting the commit that killed it](https://raw.githubusercontent.com/Jhongdlp/obit/main/docs/demo.gif)
 
 An obituary records a death and its cause. It doesn't bury anyone. Neither does this: `obit` writes an `OBITUARY.md` full of evidence, and you — or your agent — decide what to delete.
 

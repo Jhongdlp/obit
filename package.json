@@ -1,6 +1,6 @@
 {
   "name": "obit",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Finds the dead code your AI agent left behind, and tells you how it died so you can decide what to delete.",
   "type": "module",
   "bin": {
@@ -14,7 +14,9 @@
   },
   "scripts": {
     "build": "tsc",
-    "dev": "node --experimental-strip-types src/index.ts"
+    "dev": "node --experimental-strip-types src/index.ts",
+    "prepublishOnly": "npm run test && npm run build",
+    "test": "node --experimental-strip-types src/analyze.test.ts"
   },
   "keywords": [
     "dead-code",

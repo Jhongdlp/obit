@@ -14,9 +14,15 @@ const here = dirname(fileURLToPath(import.meta.url));
  * the binary is always here: no download at run time.
  */
 function detect(cwd: string): Candidate[] {
-  const cli = [join(here, "..", "node_modules", "knip", "dist", "cli.js"),
-               join(cwd, "node_modules", "knip", "dist", "cli.js")].find(existsSync);
-  if (!cli) throw new Error("knip not found — reinstall obit");
+  // Resolve through Node rather than guessing a path: npm hoists knip to the
+  // top-level node_modules, so looking inside obit's own folder finds nothing.
+  let cli: string;
+  try {
+    cli = join(dirname(fileURLToPath(import.meta.resolve("knip"))), "cli.js");
+  } catch {
+    cli = join(cwd, "node_modules", "knip", "dist", "cli.js");
+  }
+  if (!existsSync(cli)) throw new Error("knip not found — reinstall obit");
 
   // Spawn with this same node rather than the bin shebang: no PATH surprises,
   // and knip always runs on the version obit was tested against.

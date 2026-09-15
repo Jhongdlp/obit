@@ -78,6 +78,16 @@ notchAgent, KALA_web, FlyBrain and GAME_IA.
 - New framework heuristics go in `frameworkCaveat` with a one-line reason the
   user will read in their report.
 
+## The demo GIF
+
+`docs/demo.gif` is rendered by `scripts/demo-gif.py` (Pillow, no recording
+tools needed). The text in that script is copied verbatim from a real run —
+if you change the output format, re-render it rather than editing the numbers.
+
+Cascadia Code has no emoji glyphs, so `⚰` is drawn separately from Noto Color
+Emoji at its native 109px and scaled down. Any other emoji added to a frame
+needs the same treatment or it renders as tofu.
+
 ## Checks
 
 ```bash

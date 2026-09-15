@@ -1,0 +1,54 @@
+{
+  "name": "obit",
+  "version": "0.0.0",
+  "description": "Finds the dead code your AI agent left behind, and tells you how it died so you can decide what to delete.",
+  "type": "module",
+  "bin": {
+    "obit": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "node --experimental-strip-types src/index.ts"
+  },
+  "keywords": [
+    "dead-code",
+    "unused-code",
+    "unused-exports",
+    "ai-agents",
+    "claude-code",
+    "cursor",
+    "codex",
+    "code-cleanup",
+    "technical-debt",
+    "static-analysis",
+    "knip",
+    "typescript",
+    "developer-tools",
+    "ai-slop",
+    "code-quality",
+    "refactoring"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "knip": "^6.35.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "typescript": "^5.9.3"
+  },
+  "author": "Jhon Guadalupe (@Jhongdlp)",
+  "homepage": "https://github.com/Jhongdlp/obit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jhongdlp/obit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Jhongdlp/obit/issues"
+  }
+}

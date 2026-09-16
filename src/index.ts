@@ -26,9 +26,19 @@ function detect(cwd: string): Candidate[] {
 
   // Spawn with this same node rather than the bin shebang: no PATH surprises,
   // and knip always runs on the version obit was tested against.
-  const out = execFileSync(process.execPath, [cli, "--reporter", "json", "--no-exit-code"], {
-    cwd, encoding: "utf8", maxBuffer: 64 << 20,
-  });
+  let out: string;
+  try {
+    out = execFileSync(process.execPath, [cli, "--reporter", "json", "--no-exit-code"], {
+      // stderr piped, not inherited: Node forwards a child's stderr to ours by
+      // default, which would print knip's error once here and once below.
+      cwd, encoding: "utf8", maxBuffer: 64 << 20, stdio: ["ignore", "pipe", "pipe"],
+    });
+  } catch (e) {
+    // The usual cause is "no package.json here" — a wrong directory, not a bug.
+    // knip's own message says it better than we could, so pass it through.
+    const said = String((e as { stderr?: string }).stderr ?? "").trim();
+    throw new Error(`knip could not scan ${cwd}\n     ${said || (e as Error).message}`);
+  }
   const data = JSON.parse(out.slice(out.indexOf("{")));
 
   const candidates: Candidate[] = [];
@@ -111,6 +121,15 @@ function main() {
   const cwd = resolve(process.cwd(), process.argv[2] ?? ".");
   const repo = cwd.split("/").pop()!;
 
+  // Without history every classifier returns "never referenced", so obit would
+  // call the whole codebase stillborn with total confidence. rev-parse rather
+  // than looking for a .git folder: worktrees and subdirectories are repos too.
+  try {
+    execFileSync("git", ["rev-parse", "--git-dir"], { cwd, stdio: "ignore" });
+  } catch {
+    throw new Error(`not a git repository: ${cwd}\n     obit classifies deaths by reading history, so it has nothing to read here.`);
+  }
+
   process.stderr.write("looking for dead code...\n");
   const candidates = detect(cwd);
   process.stderr.write(`${candidates.length} candidates, working out how each one died...\n`);
@@ -130,4 +149,9 @@ function main() {
 `);
 }
 
-main();
+try {
+  main();
+} catch (e) {
+  process.stderr.write(`\n  ⚰  ${(e as Error).message}\n\n`);
+  process.exit(1);
+}

@@ -24,7 +24,11 @@ export interface Finding extends Candidate {
 
 const git = (cwd: string, args: string[]) => {
   try {
-    return execFileSync("git", args, { cwd, encoding: "utf8", maxBuffer: 64 << 20 });
+    // stderr ignored: git writes "fatal: ..." in the user's own locale, and it
+    // would land in the middle of obit's progress output as unexplained noise.
+    return execFileSync("git", args, {
+      cwd, encoding: "utf8", maxBuffer: 64 << 20, stdio: ["ignore", "pipe", "ignore"],
+    });
   } catch {
     return ""; // a repo with no commits, or a pathspec matching nothing
   }
